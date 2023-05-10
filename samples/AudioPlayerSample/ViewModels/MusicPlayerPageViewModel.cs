@@ -26,15 +26,15 @@ public class MusicPlayerPageViewModel : BaseViewModel, IQueryAttributable, IDisp
 		StopCommand = new Command(Stop);
 	}
 
-	public async void ApplyQueryAttributes(IDictionary<string, object> query)
+	public void ApplyQueryAttributes(IDictionary<string, object> query)
 	{
 		if (query.TryGetValue(Routes.MusicPlayer.Arguments.Music, out object musicObject) &&
 			musicObject is MusicItemViewModel musicItem)
 		{
 			MusicItemViewModel = musicItem;
 
-			audioPlayer = audioManager.CreatePlayer(
-				await FileSystem.OpenAppPackageFileAsync(musicItem.Filename));
+			audioPlayer = audioManager.CreatePlayer();
+			audioPlayer.SetData(musicItem.Filename);
 
 			NotifyPropertyChanged(nameof(HasAudioSource));
 			NotifyPropertyChanged(nameof(Duration));

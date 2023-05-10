@@ -2,10 +2,6 @@
 
 partial class AudioPlayer : IAudioPlayer
 {
-	public AudioPlayer(Stream audioStream) { }
-
-	public AudioPlayer(string fileName) { }
-
 	protected virtual void Dispose(bool disposing) { }
 
 	public double Duration { get; }
@@ -29,6 +25,10 @@ partial class AudioPlayer : IAudioPlayer
 	public void Stop() { }
 
 	public void Seek(double position) { }
+
+	public void SetData(string fileName, bool fromAssets = true) { }
+
+	public void SetData(Stream audioStream) { }
 
 	public double Speed { get; set; }
 

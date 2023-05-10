@@ -6,16 +6,14 @@
 public interface IAudioManager
 {
 	/// <summary>
-	/// Creates a new <see cref="IAudioPlayer"/> with the supplied <paramref name="audioStream"/> ready to play.
+	/// Creates a new <see cref="IAudioPlayer"/> object.
 	/// </summary>
-	/// <param name="audioStream">The <see cref="Stream"/> containing the audio to play.</param>
-	/// <returns>A new <see cref="IAudioPlayer"/> with the supplied <paramref name="audioStream"/> ready to play.</returns>
-	IAudioPlayer CreatePlayer(Stream audioStream) => new AudioPlayer(audioStream);
+	/// <returns>A new <see cref="IAudioPlayer"/> object
+	IAudioPlayer CreatePlayer() => new AudioPlayer();
 
-	/// <summary>
-	/// Creates a new <see cref="IAudioPlayer"/> with the supplied <paramref name="fileName"/> ready to play.
-	/// </summary>
-	/// <param name="fileName">The name of the file containing the audio to play.</param>
-	/// <returns>A new <see cref="IAudioPlayer"/> with the supplied <paramref name="fileName"/> ready to play.</returns>
-	IAudioPlayer CreatePlayer(string fileName) => new AudioPlayer(fileName);
+	/// <Summary>
+	/// Create a new <see cref="IAudioRecorder"/> object
+	/// </Summary>
+	/// <returns>A new <see cref="IAudioRecorder"/> object
+	IAudioRecorder CreateRecorder() => new AudioRecorder();
 }

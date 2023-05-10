@@ -5,7 +5,7 @@ namespace Plugin.Maui.Audio;
 
 partial class AudioPlayer : IAudioPlayer
 {
-	readonly AVAudioPlayer player;
+	AVAudioPlayer player;
 	bool isDisposed;
 
 	public double Duration => player.Duration;
@@ -36,7 +36,9 @@ partial class AudioPlayer : IAudioPlayer
 				var speedValue = Math.Clamp((float)value, 0.5f, 2.0f);
 
 				if (float.IsNaN(speedValue))
+				{
 					speedValue = 1.0f;
+				}
 
 				player.Rate = speedValue;
 			}
@@ -63,7 +65,23 @@ partial class AudioPlayer : IAudioPlayer
 
 	public bool CanSeek => true;
 
-	internal AudioPlayer(Stream audioStream)
+	public void SetData(string fileName, bool fromAssets = true)
+	{
+		if (fromAssets)
+		{
+			player = AVAudioPlayer.FromUrl(NSUrl.FromFilename(fileName))
+			?? throw new FailedToLoadAudioException("Unable to create AVAudioPlayer from url.");
+
+			PreparePlayer();
+		}
+		else 
+		{
+			var stream = File.OpenRead(fileName);
+			SetData(stream);
+		}
+	}
+
+	public void SetData(Stream audioStream)
 	{
 		var data = NSData.FromStream(audioStream)
 			?? throw new FailedToLoadAudioException("Unable to convert audioStream to NSData.");
@@ -73,24 +91,17 @@ partial class AudioPlayer : IAudioPlayer
 		PreparePlayer();
 	}
 
-	internal AudioPlayer(string fileName)
+	public void Play()
 	{
-		player = AVAudioPlayer.FromUrl(NSUrl.FromFilename(fileName))
-			?? throw new FailedToLoadAudioException("Unable to create AVAudioPlayer from url.");
-
-		PreparePlayer();
+		if (player.Playing)
+		{
+			player.Pause();
+		}
+		else
+		{
+			player.Play();
+		}
 	}
-    public void Play()
-    {
-        if (player.Playing)
-        {
-            player.Pause();
-        }
-        else
-        {
-            player.Play();
-        }
-    }
 
 	protected virtual void Dispose(bool disposing)
 	{

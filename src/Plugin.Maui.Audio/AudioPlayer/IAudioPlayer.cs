@@ -90,4 +90,14 @@ public interface IAudioPlayer : IDisposable
 	/// Set the current playback position (in seconds).
 	///</Summary>
 	void Seek(double position);
+
+	///<Summary>
+	/// Set the audio file name.
+	///</Summary>
+	void SetData(string fileName, bool fromAssets = true);
+
+	///<Summary>
+	/// Set the audio stream.
+	///</Summary>
+	void SetData(Stream audioStream);
 }

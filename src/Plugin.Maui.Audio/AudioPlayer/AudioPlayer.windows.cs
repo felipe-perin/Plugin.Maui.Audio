@@ -6,7 +6,7 @@ namespace Plugin.Maui.Audio;
 partial class AudioPlayer : IAudioPlayer
 {
 	bool isDisposed = false;
-	readonly MediaPlayer player;
+	MediaPlayer player;
 
 	public double Duration => player.PlaybackSession.NaturalDuration.TotalSeconds;
 
@@ -62,7 +62,28 @@ partial class AudioPlayer : IAudioPlayer
 
 	public bool CanSeek => player.PlaybackSession.CanSeek;
 
-	public AudioPlayer(Stream audioStream)
+	public void SetData(string fileName, bool fromAssets = true)
+	{
+		if (fromAssets)
+		{
+			player = CreatePlayer();
+
+			if (player is null)
+			{
+				throw new FailedToLoadAudioException($"Failed to create {nameof(MediaPlayer)} instance. Reason unknown.");
+			}
+
+			player.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/" + fileName));
+			player.MediaEnded += OnPlaybackEnded;
+		}
+		else
+		{
+			var stream = File.OpenRead(fileName);
+			SetData(stream);
+		}
+	}
+
+	public void SetData(Stream audioStream)
 	{
 		player = CreatePlayer();
 
@@ -72,19 +93,6 @@ partial class AudioPlayer : IAudioPlayer
 		}
 
 		player.Source = MediaSource.CreateFromStream(audioStream?.AsRandomAccessStream(), string.Empty);
-		player.MediaEnded += OnPlaybackEnded;
-	}
-
-	public AudioPlayer(string fileName)
-	{
-		player = CreatePlayer();
-
-		if (player is null)
-		{
-			throw new FailedToLoadAudioException($"Failed to create {nameof(MediaPlayer)} instance. Reason unknown.");
-		}
-
-		player.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/" + fileName));
 		player.MediaEnded += OnPlaybackEnded;
 	}
 

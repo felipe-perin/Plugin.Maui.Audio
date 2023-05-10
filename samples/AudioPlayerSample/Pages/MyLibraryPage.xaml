@@ -30,12 +30,12 @@
                                Grid.RowSpan="2" />
 
                         <Label Text="{Binding Title}"
-                               FontSize="32"
+                               FontSize="Medium"
                                FontAttributes="Bold"
                                Grid.Column="1" />
 
                         <Label Text="{Binding Artist}"
-                               FontSize="20"
+                               FontSize="Small"
                                Grid.Column="1"
                                Grid.Row="1" />
                     </Grid>
